@@ -77,3 +77,7 @@ export function columnName(oldColumnName: string, column?: Column): string {
 export function fileName(oldFileName: string): string {
     return oldFileName;
 }
+
+export function referencedColumnName(oldReferenceName: string): string {
+    return oldReferenceName;
+}

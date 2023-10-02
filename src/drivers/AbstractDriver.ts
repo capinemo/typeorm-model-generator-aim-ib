@@ -232,22 +232,24 @@ export default abstract class AbstractDriver {
         generationOptions: IGenerationOptions
     ) {
         relationsTemp.forEach((relationTmp) => {
+            if (!relationTmp.ownerTable?.tscName) return;
             const ownerEntity = entities.find(
                 (entity) => entity.tscName === relationTmp.ownerTable.tscName
             );
             if (!ownerEntity) {
-                TomgUtils.LogError(
-                    `Relation between tables ${relationTmp.ownerTable.sqlName} and ${relationTmp.relatedTable.sqlName} didn't found entity model ${relationTmp.ownerTable.sqlName}.`
-                );
+                // TomgUtils.LogError(
+                //     `Relation between tables ${relationTmp.ownerTable.sqlName} and ${relationTmp.relatedTable.sqlName} didn't found entity model ${relationTmp.ownerTable.sqlName}.`
+                // );
                 return;
             }
+            if (!relationTmp.relatedTable?.tscName) return;
             const referencedEntity = entities.find(
                 (entity) => entity.tscName === relationTmp.relatedTable.tscName
             );
             if (!referencedEntity) {
-                TomgUtils.LogError(
-                    `Relation between tables ${relationTmp.ownerTable.sqlName} and ${relationTmp.relatedTable.sqlName} didn't found entity model ${relationTmp.relatedTable.sqlName}.`
-                );
+                // TomgUtils.LogError(
+                //     `Relation between tables ${relationTmp.ownerTable.sqlName} and ${relationTmp.relatedTable.sqlName} didn't found entity model ${relationTmp.relatedTable.sqlName}.`
+                // );
                 return;
             }
 
@@ -275,9 +277,9 @@ export default abstract class AbstractDriver {
                         relationTmp.relatedColumns[relationColumnIndex]
                 );
                 if (!relatedColumn) {
-                    TomgUtils.LogError(
-                        `Relation between tables ${relationTmp.ownerTable.sqlName} and ${relationTmp.relatedTable.sqlName} didn't found entity column ${relationTmp.relatedTable.sqlName}.${relatedColumn}.`
-                    );
+                    // TomgUtils.LogError(
+                    //     `Relation between tables ${relationTmp.ownerTable.sqlName} and ${relationTmp.relatedTable.sqlName} didn't found entity column ${relationTmp.relatedTable.sqlName}.${relatedColumn}.`
+                    // );
                     return;
                 }
                 ownerColumns.push(ownerColumn);
@@ -418,7 +420,9 @@ export default abstract class AbstractDriver {
                     return !!v.primary;
                 })
             ) {
-                TomgUtils.LogError(`Table ${entity.tscName} has no PK.`, false);
+                entity.columns.forEach((col) => {
+                    col.primary = true;
+                });
             }
         });
     }

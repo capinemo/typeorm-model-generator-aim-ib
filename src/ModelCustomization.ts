@@ -17,6 +17,7 @@ export default function modelCustomizationPhase(
         relationIdName: NamingStrategy.relationIdName,
         relationName: NamingStrategy.relationName,
         fileName: NamingStrategy.fileName,
+        referencedColumnName: NamingStrategy.referencedColumnName,
     };
     if (
         generationOptions.customNamingStrategyPath &&
@@ -74,6 +75,16 @@ export default function modelCustomizationPhase(
         } else {
             console.log(
                 `[${new Date().toLocaleTimeString()}] Using standard naming strategy for entity file names.`
+            );
+        }
+        if (req.referencedColumnName) {
+            console.log(
+                `[${new Date().toLocaleTimeString()}] Using custom naming strategy for referenced column names.`
+            );
+            namingStrategy.referencedColumnName = req.referencedColumnName;
+        } else {
+            console.log(
+                `[${new Date().toLocaleTimeString()}] Using standard naming strategy for referenced column names.`
             );
         }
         if (req.enablePluralization) {
@@ -251,6 +262,7 @@ function applyNamingStrategy(
 ): Entity[] {
     let retVal = changeRelationNames(dbModel);
     retVal = changeRelationIdNames(retVal);
+    retVal = changeReferencedColumnNames(retVal);
     retVal = changeEntityNames(retVal);
     retVal = changeColumnNames(retVal);
     retVal = changeFileNames(retVal);
@@ -345,6 +357,21 @@ function applyNamingStrategy(
         });
         return model;
     }
+
+    function changeReferencedColumnNames(model: Entity[]): Entity[] {
+        model.forEach((entity) => {
+            entity.relations.forEach((relation) => {
+                relation.joinColumnOptions?.forEach((reference) => {
+                    reference.referencedColumnName =
+                        namingStrategy.referencedColumnName(
+                            reference.referencedColumnName
+                        );
+                });
+            });
+        });
+        return dbModel;
+    }
+
     function changeEntityNames(entities: Entity[]): Entity[] {
         entities.forEach((entity) => {
             const newName = namingStrategy.entityName(entity.tscName, entity);

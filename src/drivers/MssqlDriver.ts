@@ -427,10 +427,10 @@ export default class MssqlDriver extends AbstractDriver {
                 (v) => v.sqlName === rows[0].TableReferenced
             );
             if (!ownerTable || !relatedTable) {
-                TomgUtils.LogError(
-                    `Relation between tables ${rows[0].TableWithForeignKey} and ${rows[0].TableReferenced} wasn't found in entity model.`,
-                    true
-                );
+                // TomgUtils.LogError(
+                //     `Relation between tables ${rows[0].TableWithForeignKey} and ${rows[0].TableReferenced} wasn't found in entity model.`,
+                //     true
+                // );
                 return;
             }
             const internal: RelationInternal = {
