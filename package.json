@@ -1,6 +1,6 @@
 {
   "name": "typeorm-model-generator-aim-ib",
-  "version": "0.4.6-a.1",
+  "version": "0.4.6-a.2",
   "description": "Generates models for TypeORM from existing databases.",
   "bin": "bin/typeorm-model-generator",
   "main": "./dist/src/library.js",
